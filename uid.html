@@ -1,2 +1,67 @@
-<h1>UID TOPUP</h1>
-<p>এখানে আপনি diamond price লিখবেন</p>
+<!DOCTYPE html>
+<html>
+<head>
+<title>UID TOPUP</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f5f5f5;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px #007bff;
+}
+
+input, select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:1px solid #007bff;
+    border-radius:8px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    background:#007bff;
+    color:white;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>💎 UID TOPUP</h2>
+
+<input type="text" placeholder="Enter UID">
+
+<select>
+<option>Select Diamond</option>
+<option>25 Diamond - 25৳</option>
+<option>50 Diamond - 45৳</option>
+<option>115 Diamond - 90৳</option>
+<option>240 Diamond - 180৳</option>
+</select>
+
+<button onclick="submitTopup()">Submit</button>
+</div>
+
+<script>
+function submitTopup(){
+    alert("✅ Order Submitted Successfully!");
+}
+</script>
+
+</body>
+</html>
