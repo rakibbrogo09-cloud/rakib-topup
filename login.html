@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<style>
+body{
+    font-family: Arial;
+    background:#f5f5f5;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px #007bff;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:1px solid #007bff;
+    border-radius:8px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    background:#007bff;
+    color:white;
+    border-radius:8px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>🔐 Login / Register</h2>
+
+<input type="text" id="user" placeholder="Username">
+<input type="password" id="pass" placeholder="Password">
+
+<button onclick="register()">Register</button>
+<button onclick="login()">Login</button>
+
+</div>
+
+<script>
+function register(){
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
+
+    localStorage.setItem("username", u);
+    localStorage.setItem("password", p);
+
+    alert("✅ Registered!");
+}
+
+function login(){
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
+
+    let su = localStorage.getItem("username");
+    let sp = localStorage.getItem("password");
+
+    if(u === su && p === sp){
+        alert("✅ Login Success!");
+        window.location.href = "dashboard.html";
+    } else {
+        alert("❌ Wrong Info!");
+    }
+}
+</script>
+
+</body>
+</html>
