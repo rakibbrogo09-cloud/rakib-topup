@@ -5,6 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RAKIB TOPUP</title>
 
+<!-- 🔥 Firebase Script -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDle4ZxvdXBXsgaYzD-XHI__Y_QheGuC68",
+  authDomain: "rakib-top-5.firebaseapp.com",
+  projectId: "rakib-top-5",
+  storageBucket: "rakib-top-5.firebasestorage.app",
+  messagingSenderId: "750948404614",
+  appId: "1:750948404614:web:7d5f17dd2d3de3c5b6f007",
+  measurementId: "G-CD9WZVE7D8"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+window.firebaseApp = app;
+</script>
+
 <style>
 .card img {
     width: 100%;
@@ -71,7 +92,6 @@ button {
     border-radius: 8px;
     cursor: pointer;
 }
-
 </style>
 </head>
 
@@ -86,6 +106,7 @@ button {
     <div class="menu">
         <div>💰 Wallet</div>
         <div onclick="window.location.href='login.html'">Login</div>
+    </div>
 </header>
 
 <div class="container">
@@ -108,10 +129,6 @@ button {
 </div>
 
 <script>
-function login(){
-    alert("Login system coming soon 😎");
-}
-
 function openPage(type){
     if(type === 'uid'){
         window.location.href = "uid.html";
