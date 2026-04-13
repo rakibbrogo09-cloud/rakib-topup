@@ -9,7 +9,7 @@
 body {
     margin: 0;
     font-family: Arial;
-    background: linear-gradient(135deg, #0f0f0f, #001f1f);
+    background: #000;
     color: white;
 }
 
@@ -19,12 +19,14 @@ header {
 }
 
 header img {
-    width: 120px;
+    width: 130px;
     border-radius: 15px;
+    box-shadow: 0 0 20px #00ff99;
 }
 
 h1 {
     color: #00ff99;
+    text-shadow: 0 0 10px #00ff99;
 }
 
 .container {
@@ -32,25 +34,34 @@ h1 {
 }
 
 .card {
-    background: #111;
+    background: rgba(0,255,153,0.05);
+    border: 1px solid #00ff99;
     padding: 20px;
-    border-radius: 12px;
+    border-radius: 15px;
     margin-bottom: 20px;
-    box-shadow: 0 0 10px #00ff99;
+    box-shadow: 0 0 15px #00ff99;
 }
 
-input, button {
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: 1px solid #00ff99;
+    border-radius: 8px;
+    background: black;
+    color: white;
+}
+
+button {
     width: 100%;
     padding: 12px;
     margin-top: 10px;
     border: none;
-    border-radius: 6px;
-}
-
-button {
+    border-radius: 8px;
     background: #00ff99;
     font-weight: bold;
     cursor: pointer;
+    box-shadow: 0 0 10px #00ff99;
 }
 
 button:hover {
@@ -64,13 +75,13 @@ button:hover {
 <header>
     <img src="logo.png">
     <h1>RAKIB TOPUP</h1>
-    <p>Fast & Secure Recharge Service</p>
+    <p>🔥 Fast & Secure Gaming Recharge 🔥</p>
 </header>
 
 <div class="container">
 
 <div class="card">
-<h2>📱 Mobile Topup</h2>
+<h2>📱 Topup</h2>
 <input type="text" placeholder="Enter Number">
 <input type="number" placeholder="Amount">
 <button>Submit</button>
@@ -85,8 +96,8 @@ button:hover {
 
 <div class="card">
 <h2>💳 Payment</h2>
-<p>Bkash: 01XXXXXXXXX</p>
-<p>Nagad: 01XXXXXXXXX</p>
+<p>📲 Bkash: 01XXXXXXXXX</p>
+<p>📲 Nagad: 01XXXXXXXXX</p>
 </div>
 
 </div>
