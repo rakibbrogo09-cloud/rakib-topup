@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RAKIB TOPUP</title>
 
-<!-- 🔥 Firebase Script -->
+<!-- 🔥 Firebase App -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
@@ -22,7 +22,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
 window.firebaseApp = app;
 </script>
 
@@ -33,7 +32,6 @@ window.firebaseApp = app;
     margin-bottom: 10px;
 }
 
-/* HEADER */
 header {
     display: flex;
     justify-content: space-between;
@@ -63,7 +61,6 @@ header {
     cursor: pointer;
 }
 
-/* CARDS */
 .container {
     padding: 20px;
 }
@@ -82,16 +79,6 @@ header {
 .card:hover {
     transform: scale(1.05);
 }
-
-/* BUTTON */
-button {
-    padding: 10px 15px;
-    border: none;
-    background: #007bff;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-}
 </style>
 </head>
 
@@ -104,8 +91,8 @@ button {
     </div>
 
     <div class="menu">
-    <div id="userInfo">👤 Guest</div>
-    <div id="authBtn" onclick="goLogin()">Login</div>
+        <div id="userInfo">👤 Guest</div>
+        <div id="authBtn">Login</div>
     </div>
 </header>
 
@@ -128,8 +115,39 @@ button {
 
 </div>
 
-<script>
-function openPage(type){
+<!-- 🔥 Firebase Auth System -->
+<script type="module">
+import { getAuth, onAuthStateChanged, signOut }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const auth = getAuth(window.firebaseApp);
+
+const userInfo = document.getElementById("userInfo");
+const authBtn = document.getElementById("authBtn");
+
+function goLogin(){
+    window.location.href = "login.html";
+}
+
+onAuthStateChanged(auth, (user) => {
+    if(user){
+        userInfo.innerText = user.email;
+        authBtn.innerText = "Logout";
+
+        authBtn.onclick = () => {
+            signOut(auth);
+            alert("Logged out");
+            location.reload();
+        }
+    } else {
+        userInfo.innerText = "👤 Guest";
+        authBtn.innerText = "Login";
+
+        authBtn.onclick = goLogin;
+    }
+});
+
+window.openPage = function(type){
     if(type === 'uid'){
         window.location.href = "uid.html";
     }
