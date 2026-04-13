@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Panel</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f5f5f5;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:10px;
+    box-shadow:0 0 10px #007bff;
+}
+
+button{
+    padding:8px 12px;
+    border:none;
+    border-radius:6px;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+.approve{
+    background:green;
+    color:white;
+}
+
+.reject{
+    background:red;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🔥 Admin Panel</h2>
+
+<div id="orders"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, updateDoc, doc }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDle4ZxvdXBXsgaYzD-XHI__Y_QheGuC68",
+  authDomain: "rakib-top-5.firebaseapp.com",
+  projectId: "rakib-top-5",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const ordersDiv = document.getElementById("orders");
+
+async function loadOrders(){
+    const querySnapshot = await getDocs(collection(db, "orders"));
+
+    querySnapshot.forEach((docSnap) => {
+        let data = docSnap.data();
+
+        let div = document.createElement("div");
+        div.className = "card";
+
+        div.innerHTML = `
+        <p>UID: ${data.uid}</p>
+        <p>Package: ${data.pack}</p>
+        <p>TRX: ${data.trx}</p>
+        <p>Status: ${data.status || "pending"}</p>
+
+        <button class="approve" onclick="approveOrder('${docSnap.id}')">Approve</button>
+        <button class="reject" onclick="rejectOrder('${docSnap.id}')">Reject</button>
+        `;
+
+        ordersDiv.appendChild(div);
+    });
+}
+
+window.approveOrder = async function(id){
+    await updateDoc(doc(db, "orders", id), {
+        status: "approved"
+    });
+    alert("✅ Approved");
+    location.reload();
+}
+
+window.rejectOrder = async function(id){
+    await updateDoc(doc(db, "orders", id), {
+        status: "rejected"
+    });
+    alert("❌ Rejected");
+    location.reload();
+}
+
+loadOrders();
+</script>
+
+</body>
+</html>
