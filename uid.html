@@ -53,29 +53,42 @@ button{
 <option>115 Diamond - 90৳</option>
 <option>240 Diamond - 180৳</option>
 </select>
-
+<input type="text" id="trx" placeholder="Enter Transaction ID">
 <button onclick="submitTopup()">Submit</button>
 </div>
 
-<script>
 <script>
 function submitTopup(){
 
     let uid = document.querySelector("input").value;
     let pack = document.querySelector("select").value;
+    let trx = document.getElementById("trx").value;
 
-    let order = "UID: " + uid + " | " + pack;
+    // validation
+    if(!uid){
+        alert("❌ UID দিন");
+        return;
+    }
 
-    // Save order history
+    if(pack === "Select Diamond"){
+        alert("❌ Package select করুন");
+        return;
+    }
+
+    if(!trx){
+        alert("❌ Transaction ID দিন");
+        return;
+    }
+
+    // create order
+    let order = "UID: " + uid + " | " + pack + " | TRX: " + trx;
+
+    // save to localStorage
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
     orders.push(order);
     localStorage.setItem("orders", JSON.stringify(orders));
 
-    alert("💳 Send Money:\nBkash: 01402960189\nNagad: 01402960189\n\n📌 Payment করার পর Dashboard এ দেখুন");
+    alert("✅ Order Submitted Successfully!");
 
 }
 </script>
-</script>
-
-</body>
-</html>
