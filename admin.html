@@ -23,7 +23,6 @@ button{
     border:none;
     border-radius:6px;
     margin-top:10px;
-    cursor:pointer;
 }
 
 .approve{
@@ -46,7 +45,7 @@ button{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, updateDoc, doc, getDoc, setDoc }
+import { getFirestore, collection, getDocs, updateDoc, doc, setDoc }
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -61,9 +60,9 @@ const db = getFirestore(app);
 const ordersDiv = document.getElementById("orders");
 
 async function loadOrders(){
-    const querySnapshot = await getDocs(collection(db, "orders"));
-
     ordersDiv.innerHTML = "";
+
+    const querySnapshot = await getDocs(collection(db, "orders"));
 
     querySnapshot.forEach((docSnap) => {
         let data = docSnap.data();
@@ -72,13 +71,13 @@ async function loadOrders(){
         div.className = "card";
 
         div.innerHTML = `
-        <p><b>User:</b> ${data.user}</p>
+        <p>👤 ${data.user}</p>
         <p>UID: ${data.uid}</p>
         <p>Amount: ${data.amount}৳</p>
         <p>TRX: ${data.trx}</p>
-        <p>Status: ${data.status || "pending"}</p>
+        <p>Status: ${data.status}</p>
 
-        <button class="approve" onclick="approveOrder('${docSnap.id}')">Approve</button>
+        <button class="approve" onclick="approveOrder('${docSnap.id}','${data.user}',${data.amount})">Approve</button>
         <button class="reject" onclick="rejectOrder('${docSnap.id}')">Reject</button>
         `;
 
@@ -86,39 +85,26 @@ async function loadOrders(){
     });
 }
 
-window.approveOrder = async function(id){
+// ✅ APPROVE → BALANCE ADD
+window.approveOrder = async function(id, userEmail, amount){
 
-    const orderRef = doc(db, "orders", id);
-    const orderSnap = await getDoc(orderRef);
-    const orderData = orderSnap.data();
-
-    let userEmail = orderData.user;
-    let amount = parseInt(orderData.amount);
-
-    // 🔥 user balance doc
-    const userRef = doc(db, "users", userEmail);
-    const userSnap = await getDoc(userRef);
-
-    let currentBalance = 0;
-
-    if(userSnap.exists()){
-        currentBalance = userSnap.data().balance || 0;
-    }
-
-    // 🔥 update balance
-    await setDoc(userRef, {
-        balance: currentBalance + amount
-    });
-
-    // 🔥 update order status
-    await updateDoc(orderRef, {
+    // update order
+    await updateDoc(doc(db, "orders", id), {
         status: "approved"
     });
 
-    alert("✅ Approved + Balance Added");
+    // update balance
+    const userRef = doc(db, "users", userEmail);
+
+    await setDoc(userRef, {
+        balance: amount
+    }, { merge: true });
+
+    alert("✅ Approved & Balance Added");
     loadOrders();
 }
 
+// ❌ REJECT
 window.rejectOrder = async function(id){
     await updateDoc(doc(db, "orders", id), {
         status: "rejected"
