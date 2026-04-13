@@ -1,73 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>UID TOPUP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    font-family: Arial;
+    background:#f5f5f5;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px #007bff;
+}
+
+input, select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:1px solid #007bff;
+    border-radius:8px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    background:#007bff;
+    color:white;
+    border-radius:8px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>💎 UID TOPUP</h2>
+
+<input type="text" id="uid" placeholder="Enter UID">
+
+<select id="pack">
+<option>Select Diamond</option>
+<option value="25">25 Diamond - 25৳</option>
+<option value="45">50 Diamond - 45৳</option>
+<option value="90">115 Diamond - 90৳</option>
+<option value="180">240 Diamond - 180৳</option>
+</select>
+
+<button onclick="goPayment()">Pay Now</button>
+</div>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, addDoc, collection }
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDle4ZxvdXBXsgaYzD-XHI__Y_QheGuC68",
-  authDomain: "rakib-top-5.firebaseapp.com",
-  projectId: "rakib-top-5",
-};
+const auth = getAuth();
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+// 🔥 login check
+onAuthStateChanged(auth, (user) => {
+    if(!user){
+        window.location.href = "login.html";
+    }
+});
 
-// 🔥 show amount
-let amount = localStorage.getItem("amount") || 0;
-document.getElementById("amount").innerText = amount;
-document.getElementById("showAmount").innerText = amount;
+// 🔥 go payment
+window.goPayment = function(){
 
-// 🔥 copy
-window.copyNumber = function(){
-    navigator.clipboard.writeText("018XXXXXXXX");
-    alert("Number copied!");
-}
+    let uid = document.getElementById("uid").value;
+    let pack = document.getElementById("pack").value;
 
-window.copyAmount = function(){
-    navigator.clipboard.writeText(amount);
-    alert("Amount copied!");
-}
-
-// 🔥 submit payment
-window.submitPayment = async function(){
-
-    let trx = document.getElementById("trx").value;
-    let uid = localStorage.getItem("uid");
-
-    if(!trx){
-        alert("Transaction ID দিন");
+    if(!uid){
+        alert("UID দিন");
         return;
     }
 
-    if(!auth.currentUser){
-        alert("Login first");
+    if(pack === "Select Diamond"){
+        alert("Package select করুন");
         return;
     }
 
-    let order = {
-        uid: uid,
-        amount: parseInt(amount),
-        trx: trx,
-        user: auth.currentUser.email,
-        status: "pending",
-        time: new Date().toLocaleString()
-    };
+    // save
+    localStorage.setItem("uid", uid);
+    localStorage.setItem("amount", pack);
 
-    try{
-        await addDoc(collection(db, "orders"), order);
-        alert("✅ Payment Submitted");
-
-        // clear
-        localStorage.removeItem("uid");
-        localStorage.removeItem("amount");
-
-        window.location.href = "dashboard.html";
-
-    }catch(e){
-        alert("❌ Error");
-        console.log(e);
-    }
+    window.location.href = "payment.html";
 }
 </script>
+
+</body>
+</html>
