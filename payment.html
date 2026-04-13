@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Payment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+    padding:15px;
+    color:white;
+}
+
+.box{
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border-radius:20px;
+    padding:18px;
+    margin-bottom:15px;
+    box-shadow: 0 0 20px rgba(0,123,255,0.4);
+}
+
+.title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:bold;
+}
+
+.title img{
+    width:45px;
+    border-radius:12px;
+}
+
+.amount{
+    font-size:26px;
+    font-weight:bold;
+    text-align:center;
+    color:#00eaff;
+}
+
+.step{
+    margin:12px 0;
+    padding:10px;
+    border-radius:10px;
+    background: rgba(255,255,255,0.05);
+}
+
+.copy-btn{
+    background: linear-gradient(45deg,#00c6ff,#0072ff);
+    color:white;
+    padding:6px 12px;
+    border:none;
+    border-radius:8px;
+    margin-left:10px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:none;
+    margin-top:10px;
+}
+
+.verify-btn{
+    width:100%;
+    padding:15px;
+    background: linear-gradient(45deg,#00eaff,#0072ff);
+    color:white;
+    border:none;
+    border-radius:15px;
+    margin-top:15px;
+    font-size:17px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box title">
+    <img src="logo.png">
+    <div>RAKIB TOPUP</div>
+</div>
+
+<div class="box amount">
+    💰 Amount: <span id="amount">0</span> BDT
+</div>
+
+<div class="box">
+
+<div class="step">🔹 Nagad App এ যান</div>
+<div class="step">🔹 Send Money করুন</div>
+
+<div class="step">
+Number: <b>018XXXXXXXX</b>
+</div>
+
+<div class="step">
+Amount: <b id="showAmount">0</b>
+</div>
+
+<input type="text" id="trx" placeholder="Enter Transaction ID">
+
+<button class="verify-btn" onclick="submitPayment()">VERIFY</button>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, addDoc, collection }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDle4ZxvdXBXsgaYzD-XHI__Y_QheGuC68",
+  authDomain: "rakib-top-5.firebaseapp.com",
+  projectId: "rakib-top-5",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// show amount
+let amount = localStorage.getItem("amount") || 0;
+document.getElementById("amount").innerText = amount;
+document.getElementById("showAmount").innerText = amount;
+
+window.submitPayment = async function(){
+
+    let trx = document.getElementById("trx").value;
+    let uid = localStorage.getItem("uid");
+
+    if(!trx){
+        alert("Transaction ID দিন");
+        return;
+    }
+
+    if(!auth.currentUser){
+        alert("Login first");
+        return;
+    }
+
+    let order = {
+        uid: uid,
+        amount: parseInt(amount),
+        trx: trx,
+        user: auth.currentUser.email,
+        status: "pending",
+        time: new Date().toLocaleString()
+    };
+
+    await addDoc(collection(db, "orders"), order);
+
+    alert("✅ Payment Submitted");
+
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
