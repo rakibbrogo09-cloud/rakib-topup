@@ -44,27 +44,44 @@ button{
 <div class="card">
 <h2>💎 UID TOPUP</h2>
 
-<input type="text" placeholder="Enter UID">
+<input type="text" id="uid" placeholder="Enter UID">
 
-<select>
+<select id="pack">
 <option>Select Diamond</option>
-<option>25 Diamond - 25৳</option>
-<option>50 Diamond - 45৳</option>
-<option>115 Diamond - 90৳</option>
-<option>240 Diamond - 180৳</option>
+<option value="25">25 Diamond - 25৳</option>
+<option value="45">50 Diamond - 45৳</option>
+<option value="90">115 Diamond - 90৳</option>
+<option value="180">240 Diamond - 180৳</option>
 </select>
+
 <input type="text" id="trx" placeholder="Enter Transaction ID">
+
 <button onclick="submitTopup()">Submit</button>
 </div>
 
-<script>
-function submitTopup(){
+<!-- 🔥 Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, addDoc, collection }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    let uid = document.querySelector("input").value;
-    let pack = document.querySelector("select").value;
+const firebaseConfig = {
+  apiKey: "AIzaSyDle4ZxvdXBXsgaYzD-XHI__Y_QheGuC68",
+  authDomain: "rakib-top-5.firebaseapp.com",
+  projectId: "rakib-top-5",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.submitTopup = async function(){
+
+    let uid = document.getElementById("uid").value;
+    let pack = document.getElementById("pack").value;
     let trx = document.getElementById("trx").value;
 
-    // validation
     if(!uid){
         alert("❌ UID দিন");
         return;
@@ -80,15 +97,30 @@ function submitTopup(){
         return;
     }
 
-    // create order
-    let order = "UID: " + uid + " | " + pack + " | TRX: " + trx;
+    if(!auth.currentUser){
+        alert("❌ Please login first");
+        return;
+    }
 
-    // save to localStorage
-    let orders = JSON.parse(localStorage.getItem("orders")) || [];
-    orders.push(order);
-    localStorage.setItem("orders", JSON.stringify(orders));
+    let order = {
+        uid: uid,
+        pack: pack,
+        trx: trx,
+        user: auth.currentUser.email,
+        amount: parseInt(pack),
+        status: "pending",
+        time: new Date().toLocaleString()
+    };
 
-    alert("✅ Order Submitted Successfully!");
-
+    try{
+        await addDoc(collection(db, "orders"), order);
+        alert("✅ Order Submitted (Firebase)");
+    }catch(e){
+        alert("❌ Error");
+        console.log(e);
+    }
 }
 </script>
+
+</body>
+</html>
