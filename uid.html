@@ -58,9 +58,23 @@ button{
 </div>
 
 <script>
+<script>
 function submitTopup(){
-    alert("✅ Order Submitted Successfully!");
+
+    let uid = document.querySelector("input").value;
+    let pack = document.querySelector("select").value;
+
+    let order = "UID: " + uid + " | " + pack;
+
+    // Save order history
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    orders.push(order);
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    alert("💳 Send Money:\nBkash: 01402960189\nNagad: 01402960189\n\n📌 Payment করার পর Dashboard এ দেখুন");
+
 }
+</script>
 </script>
 
 </body>
