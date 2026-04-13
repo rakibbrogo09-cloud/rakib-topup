@@ -1,2 +1,66 @@
-<h1>Level Up Package</h1>
-<p>এখানে level price দিবেন</p>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Level Up Package</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f5f5f5;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px #007bff;
+}
+
+input, select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:1px solid #007bff;
+    border-radius:8px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    background:#007bff;
+    color:white;
+    border-radius:8px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>🚀 LEVEL UP PACKAGE</h2>
+
+<input type="text" placeholder="Enter UID">
+
+<select>
+<option>Select Level Package</option>
+<option>Level 1 → 45৳</option>
+<option>Level 2 → 75৳</option>
+<option>Level 3 → 125৳</option>
+<option>Level Max → 405৳</option>
+</select>
+
+<button onclick="submitLevel()">Submit</button>
+</div>
+
+<script>
+function submitLevel(){
+    alert("🔥 Level Up Order Submitted!");
+}
+</script>
+
+</body>
+</html>
