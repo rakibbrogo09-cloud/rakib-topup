@@ -16,21 +16,46 @@ body{
     border-radius:15px;
     box-shadow:0 0 10px #007bff;
 }
+
+button{
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    background:#007bff;
+    color:white;
+    border-radius:8px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="card">
-<h2>👤 Welcome</h2>
-<p id="name"></p>
+<h2>👤 Dashboard</h2>
 
+<p id="name"></p>
+<p>💰 Balance: <span id="bal">0</span>৳</p>
+
+<input type="number" id="addmoney" placeholder="Enter amount">
+
+<button onclick="addMoney()">Add Money</button>
 <button onclick="logout()">Logout</button>
+
 </div>
 
 <script>
-document.getElementById("name").innerText =
-"User: " + localStorage.getItem("username");
+let user = localStorage.getItem("username");
+document.getElementById("name").innerText = "User: " + user;
+
+let balance = localStorage.getItem("balance") || 0;
+document.getElementById("bal").innerText = balance;
+
+function addMoney(){
+    let amount = document.getElementById("addmoney").value;
+    balance = parseInt(balance) + parseInt(amount);
+    localStorage.setItem("balance", balance);
+    document.getElementById("bal").innerText = balance;
+}
 
 function logout(){
     window.location.href = "login.html";
