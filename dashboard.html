@@ -39,48 +39,73 @@ button{
 <h3>📦 Order History</h3>
 <ul id="orders"></ul>
 
-<input type="number" id="addmoney" placeholder="Enter amount">
-
-<button onclick="addMoney()">Add Money</button>
 <button onclick="logout()">Logout</button>
-
 </div>
 
-<script>
-// user name
-let user = localStorage.getItem("username");
-document.getElementById("name").innerText = "User: " + user;
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// balance
-let balance = localStorage.getItem("balance") || 0;
-document.getElementById("bal").innerText = balance;
+import { getFirestore, doc, getDoc, collection, getDocs, query, where }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// orders
-let orderList = document.getElementById("orders");
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
+const firebaseConfig = {
+  apiKey: "AIzaSyDle4ZxvdXBXsgaYzD-XHI__Y_QheGuC68",
+  authDomain: "rakib-top-5.firebaseapp.com",
+  projectId: "rakib-top-5",
+};
 
-orders.forEach(o => {
-    let li = document.createElement("li");
-    li.innerText = o;
-    orderList.appendChild(li);
-});
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-// add money
-function addMoney(){
-    let amount = document.getElementById("addmoney").value;
+const nameEl = document.getElementById("name");
+const balEl = document.getElementById("bal");
+const orderList = document.getElementById("orders");
 
-    if(!amount){
-        alert("Enter amount");
+onAuthStateChanged(auth, async (user) => {
+
+    if(!user){
+        alert("Login first");
+        window.location.href = "login.html";
         return;
     }
 
-    balance = parseInt(balance) + parseInt(amount);
-    localStorage.setItem("balance", balance);
-    document.getElementById("bal").innerText = balance;
-}
+    let email = user.email;
+    nameEl.innerText = "User: " + email;
 
-// logout
-function logout(){
+    // 🔥 Load Balance
+    const userRef = doc(db, "users", email);
+    const userSnap = await getDoc(userRef);
+
+    if(userSnap.exists()){
+        balEl.innerText = userSnap.data().balance || 0;
+    } else {
+        balEl.innerText = 0;
+    }
+
+    // 🔥 Load Orders
+    const q = query(collection(db, "orders"), where("user", "==", email));
+    const querySnapshot = await getDocs(q);
+
+    orderList.innerHTML = "";
+
+    querySnapshot.forEach((docSnap) => {
+        let data = docSnap.data();
+
+        let li = document.createElement("li");
+        li.innerText = `
+UID: ${data.uid} | Amount: ${data.amount}৳ | Status: ${data.status}
+        `;
+
+        orderList.appendChild(li);
+    });
+
+});
+
+window.logout = function(){
+    signOut(auth);
     window.location.href = "login.html";
 }
 </script>
