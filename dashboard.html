@@ -35,7 +35,8 @@ button{
 
 <p id="name"></p>
 <p>💰 Balance: <span id="bal">0</span>৳</p>
-
+<h3>📦 Order History</h3>
+<ul id="orders"></ul>
 <input type="number" id="addmoney" placeholder="Enter amount">
 
 <button onclick="addMoney()">Add Money</button>
@@ -49,7 +50,16 @@ document.getElementById("name").innerText = "User: " + user;
 
 let balance = localStorage.getItem("balance") || 0;
 document.getElementById("bal").innerText = balance;
+<script>
+let orderList = document.getElementById("orders");
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
+orders.forEach(o => {
+    let li = document.createElement("li");
+    li.innerText = o;
+    orderList.appendChild(li);
+});
+</script>
 function addMoney(){
     let amount = document.getElementById("addmoney").value;
     balance = parseInt(balance) + parseInt(amount);
