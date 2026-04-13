@@ -1,2 +1,65 @@
-<h1>Weekly + Monthly</h1>
-<p>এখানে package price দিবেন</p>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Weekly + Monthly</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f5f5f5;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px #007bff;
+}
+
+input, select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:1px solid #007bff;
+    border-radius:8px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    background:#007bff;
+    color:white;
+    border-radius:8px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>📅 WEEKLY + MONTHLY</h2>
+
+<input type="text" placeholder="Enter UID">
+
+<select>
+<option>Select Package</option>
+<option>Weekly - 160৳</option>
+<option>Monthly - 800৳</option>
+<option>Weekly + Monthly - 950৳</option>
+</select>
+
+<button onclick="submitOrder()">Submit</button>
+</div>
+
+<script>
+function submitOrder(){
+    alert("✅ Package Order Submitted!");
+}
+</script>
+
+</body>
+</html>
