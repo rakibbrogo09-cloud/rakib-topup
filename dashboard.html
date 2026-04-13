@@ -35,8 +35,10 @@ button{
 
 <p id="name"></p>
 <p>💰 Balance: <span id="bal">0</span>৳</p>
+
 <h3>📦 Order History</h3>
 <ul id="orders"></ul>
+
 <input type="number" id="addmoney" placeholder="Enter amount">
 
 <button onclick="addMoney()">Add Money</button>
@@ -45,12 +47,15 @@ button{
 </div>
 
 <script>
+// user name
 let user = localStorage.getItem("username");
 document.getElementById("name").innerText = "User: " + user;
 
+// balance
 let balance = localStorage.getItem("balance") || 0;
 document.getElementById("bal").innerText = balance;
-<script>
+
+// orders
 let orderList = document.getElementById("orders");
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
@@ -59,14 +64,22 @@ orders.forEach(o => {
     li.innerText = o;
     orderList.appendChild(li);
 });
-</script>
+
+// add money
 function addMoney(){
     let amount = document.getElementById("addmoney").value;
+
+    if(!amount){
+        alert("Enter amount");
+        return;
+    }
+
     balance = parseInt(balance) + parseInt(amount);
     localStorage.setItem("balance", balance);
     document.getElementById("bal").innerText = balance;
 }
 
+// logout
 function logout(){
     window.location.href = "login.html";
 }
