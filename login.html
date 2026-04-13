@@ -2,6 +2,8 @@
 <html>
 <head>
 <title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body{
     font-family: Arial;
@@ -40,40 +42,48 @@ button{
 <body>
 
 <div class="card">
-<h2>🔐 Login / Register</h2>
+<h2>🔐 Login</h2>
 
-<input type="text" id="user" placeholder="Username">
-<input type="password" id="pass" placeholder="Password">
+<input type="email" id="email" placeholder="Enter Email">
+<input type="password" id="pass" placeholder="Enter Password">
 
-<button onclick="register()">Register</button>
 <button onclick="login()">Login</button>
-
 </div>
 
-<script>
-function register(){
-    let u = document.getElementById("user").value;
-    let p = document.getElementById("pass").value;
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    localStorage.setItem("username", u);
-    localStorage.setItem("password", p);
+const firebaseConfig = {
+  apiKey: "AIzaSyDle4ZxvdXBXsgaYzD-XHI__Y_QheGuC68",
+  authDomain: "rakib-top-5.firebaseapp.com",
+  projectId: "rakib-top-5",
+};
 
-    alert("✅ Registered!");
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-function login(){
-    let u = document.getElementById("user").value;
-    let p = document.getElementById("pass").value;
-
-    let su = localStorage.getItem("username");
-    let sp = localStorage.getItem("password");
-
-    if(u === su && p === sp){
-        alert("✅ Login Success!");
-        window.location.href = "dashboard.html";
-    } else {
-        alert("❌ Wrong Info!");
+// 🔥 already logged হলে index এ যাবে
+onAuthStateChanged(auth, (user) => {
+    if(user){
+        window.location.href = "index.html";
     }
+});
+
+// 🔥 login function
+window.login = function(){
+
+    let email = document.getElementById("email").value;
+    let pass = document.getElementById("pass").value;
+
+    signInWithEmailAndPassword(auth, email, pass)
+    .then(() => {
+        window.location.href = "index.html"; // ✅ loop fix
+    })
+    .catch(() => {
+        alert("Login failed");
+    });
 }
 </script>
 
