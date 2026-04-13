@@ -12,13 +12,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 🔥 IMPORTANT FIX
 onAuthStateChanged(auth, (user) => {
 
     if(user){
         document.getElementById("name").innerText = "User: " + user.email;
     }else{
-        alert("Login first");
+        // ❌ alert removed
         window.location.href = "login.html";
     }
 
