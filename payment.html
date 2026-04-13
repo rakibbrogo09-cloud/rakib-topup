@@ -14,46 +14,15 @@ body{
 
 .box{
     background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
     border-radius:20px;
     padding:18px;
     margin-bottom:15px;
-    box-shadow: 0 0 20px rgba(0,123,255,0.4);
-}
-
-.title{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-weight:bold;
-}
-
-.title img{
-    width:45px;
-    border-radius:12px;
 }
 
 .amount{
     font-size:26px;
-    font-weight:bold;
     text-align:center;
     color:#00eaff;
-}
-
-.step{
-    margin:12px 0;
-    padding:10px;
-    border-radius:10px;
-    background: rgba(255,255,255,0.05);
-}
-
-.copy-btn{
-    background: linear-gradient(45deg,#00c6ff,#0072ff);
-    color:white;
-    padding:6px 12px;
-    border:none;
-    border-radius:8px;
-    margin-left:10px;
 }
 
 input{
@@ -67,49 +36,33 @@ input{
 .verify-btn{
     width:100%;
     padding:15px;
-    background: linear-gradient(45deg,#00eaff,#0072ff);
-    color:white;
+    background:#00eaff;
     border:none;
     border-radius:15px;
     margin-top:15px;
-    font-size:17px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="box title">
-    <img src="logo.png">
-    <div>RAKIB TOPUP</div>
+<div class="box">
+<h2>💳 Payment</h2>
 </div>
 
 <div class="box amount">
-    💰 Amount: <span id="amount">0</span> BDT
+Amount: <span id="amount">0</span>৳
 </div>
 
 <div class="box">
-
-<div class="step">🔹 Nagad App এ যান</div>
-<div class="step">🔹 Send Money করুন</div>
-
-<div class="step">
-Number: <b>018XXXXXXXX</b>
-</div>
-
-<div class="step">
-Amount: <b id="showAmount">0</b>
-</div>
-
-<input type="text" id="trx" placeholder="Enter Transaction ID">
-
+<input type="text" id="trx" placeholder="Transaction ID">
 <button class="verify-btn" onclick="submitPayment()">VERIFY</button>
-
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, addDoc, collection }
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -120,14 +73,21 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const auth = getAuth();
 const db = getFirestore(app);
 
-// show amount
+// 🔥 login check
+onAuthStateChanged(auth, (user) => {
+    if(!user){
+        window.location.href = "login.html";
+    }
+});
+
+// 🔥 show amount
 let amount = localStorage.getItem("amount") || 0;
 document.getElementById("amount").innerText = amount;
-document.getElementById("showAmount").innerText = amount;
 
+// 🔥 submit
 window.submitPayment = async function(){
 
     let trx = document.getElementById("trx").value;
@@ -138,7 +98,9 @@ window.submitPayment = async function(){
         return;
     }
 
-    if(!auth.currentUser){
+    let user = auth.currentUser;
+
+    if(!user){
         alert("Login first");
         return;
     }
@@ -147,7 +109,7 @@ window.submitPayment = async function(){
         uid: uid,
         amount: parseInt(amount),
         trx: trx,
-        user: auth.currentUser.email,
+        user: user.email,
         status: "pending",
         time: new Date().toLocaleString()
     };
@@ -155,6 +117,9 @@ window.submitPayment = async function(){
     await addDoc(collection(db, "orders"), order);
 
     alert("✅ Payment Submitted");
+
+    localStorage.removeItem("uid");
+    localStorage.removeItem("amount");
 
     window.location.href = "dashboard.html";
 }
