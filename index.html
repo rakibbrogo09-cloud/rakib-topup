@@ -9,98 +9,119 @@
 body {
     margin: 0;
     font-family: Arial;
-    background: #000;
+    background: #ffffff;
+}
+
+/* HEADER */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #007bff;
     color: white;
 }
 
-header {
-    text-align: center;
-    padding: 30px;
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-header img {
-    width: 130px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px #00ff99;
+.logo img {
+    width: 40px;
+    border-radius: 8px;
 }
 
-h1 {
-    color: #00ff99;
-    text-shadow: 0 0 10px #00ff99;
+.menu {
+    display: flex;
+    gap: 15px;
 }
 
+.menu div {
+    cursor: pointer;
+}
+
+/* CARDS */
 .container {
     padding: 20px;
 }
 
 .card {
-    background: rgba(0,255,153,0.05);
-    border: 1px solid #00ff99;
+    background: white;
+    border: 2px solid #007bff;
+    border-radius: 12px;
     padding: 20px;
-    border-radius: 15px;
     margin-bottom: 20px;
-    box-shadow: 0 0 15px #00ff99;
-}
-
-input {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: 1px solid #00ff99;
-    border-radius: 8px;
-    background: black;
-    color: white;
-}
-
-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 8px;
-    background: #00ff99;
-    font-weight: bold;
+    box-shadow: 0 0 10px #007bff;
+    transition: 0.3s;
     cursor: pointer;
-    box-shadow: 0 0 10px #00ff99;
 }
 
-button:hover {
-    background: #00cc77;
+.card:hover {
+    transform: scale(1.05);
 }
+
+/* BUTTON */
+button {
+    padding: 10px 15px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-    <img src="logo.png">
-    <h1>RAKIB TOPUP</h1>
-    <p>🔥 Fast & Secure Gaming Recharge 🔥</p>
+    <div class="logo">
+        <img src="logo.png">
+        <h2>RAKIB TOPUP</h2>
+    </div>
+
+    <div class="menu">
+        <div>💰 Wallet</div>
+        <div onclick="login()">Login</div>
+    </div>
 </header>
 
 <div class="container">
 
-<div class="card">
-<h2>📱 Topup</h2>
-<input type="text" placeholder="Enter Number">
-<input type="number" placeholder="Amount">
-<button>Submit</button>
+<div class="card" onclick="openPage('uid')">
+    <h3>UID TOP UP [BD]</h3>
 </div>
 
-<div class="card">
-<h2>🔐 Login</h2>
-<input type="text" placeholder="Username">
-<input type="password" placeholder="Password">
-<button>Login</button>
+<div class="card" onclick="openPage('weekly')">
+    <h3>WEEKLY + MONTHLY</h3>
 </div>
 
-<div class="card">
-<h2>💳 Payment</h2>
-<p>📲 Bkash: 01XXXXXXXXX</p>
-<p>📲 Nagad: 01XXXXXXXXX</p>
+<div class="card" onclick="openPage('level')">
+    <h3>LEVEL UP PACKAGE</h3>
 </div>
 
 </div>
+
+<script>
+function login(){
+    alert("Login system coming soon 😎");
+}
+
+function openPage(type){
+    if(type === 'uid'){
+        window.location.href = "uid.html";
+    }
+    if(type === 'weekly'){
+        window.location.href = "weekly.html";
+    }
+    if(type === 'level'){
+        window.location.href = "level.html";
+    }
+}
+</script>
 
 </body>
 </html>
