@@ -4,27 +4,8 @@
 <title>Dashboard</title>
 
 <style>
-body{
-    font-family: Arial;
-    background:#f5f5f5;
-    padding:20px;
-}
-
-.card{
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 0 10px #007bff;
-}
-
-button{
-    padding:10px;
-    margin-top:10px;
-    border:none;
-    background:#007bff;
-    color:white;
-    border-radius:8px;
-}
+body{font-family:Arial;background:#f5f5f5;padding:20px;}
+.card{background:white;padding:20px;border-radius:15px;box-shadow:0 0 10px #007bff;}
 </style>
 </head>
 
@@ -32,81 +13,42 @@ button{
 
 <div class="card">
 <h2>👤 Dashboard</h2>
-
-<p id="name">Loading...</p>
+<p id="name"></p>
 <p>💰 Balance: <span id="bal">0</span>৳</p>
-
-<h3>📦 Order History</h3>
-<ul id="orders"></ul>
-
-<button onclick="logout()">Logout</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut }
+import { getFirestore, doc, getDoc }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged }
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-import { getFirestore, doc, getDoc, collection, getDocs, query, where }
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
 const firebaseConfig = {
-  apiKey: "AIzaSyDle4ZxvdXBXsgaYzD-XHI__Y_QheGuC68",
+  apiKey: "AIzaSy...",
   authDomain: "rakib-top-5.firebaseapp.com",
   projectId: "rakib-top-5",
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-const nameEl = document.getElementById("name");
-const balEl = document.getElementById("bal");
-const orderList = document.getElementById("orders");
-
-// 🔥 AUTH FIXED
 onAuthStateChanged(auth, async (user) => {
+    if(user){
+        document.getElementById("name").innerText = user.email;
 
-    if(!user){
-        window.location.href = "login.html";
-        return;
-    }
+        const ref = doc(db, "users", user.email);
+        const snap = await getDoc(ref);
 
-    let email = user.email;
-    nameEl.innerText = "User: " + email;
-
-    // 🔥 Balance Load
-    const userRef = doc(db, "users", email);
-    const userSnap = await getDoc(userRef);
-
-    if(userSnap.exists()){
-        balEl.innerText = userSnap.data().balance || 0;
+        if(snap.exists()){
+            document.getElementById("bal").innerText = snap.data().balance;
+        }
     }else{
-        balEl.innerText = 0;
+        alert("Login first");
+        window.location.href="login.html";
     }
-
-    // 🔥 Orders Load
-    const q = query(collection(db, "orders"), where("user", "==", email));
-    const querySnapshot = await getDocs(q);
-
-    orderList.innerHTML = "";
-
-    querySnapshot.forEach((docSnap) => {
-        let data = docSnap.data();
-
-        let li = document.createElement("li");
-        li.innerText = `UID: ${data.uid} | Amount: ${data.amount}৳ | Status: ${data.status}`;
-
-        orderList.appendChild(li);
-    });
-
 });
-
-// logout
-window.logout = function(){
-    signOut(auth);
-    window.location.href = "login.html";
-}
 </script>
 
 </body>
