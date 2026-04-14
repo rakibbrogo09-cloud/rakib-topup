@@ -22,6 +22,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, getDocs, updateDoc, doc, getDoc, setDoc }
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+import { getAuth, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSy...",
   authDomain: "rakib-top-5.firebaseapp.com",
@@ -30,10 +33,36 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+// 🔐 ADMIN EMAIL (IMPORTANT)
+const ADMIN_EMAIL = "rakibbrogo09@gmail.com"; // 👈 এখানে তোমার email বসাও
 
 const ordersDiv = document.getElementById("orders");
 
+// 🔥 PROTECTION
+onAuthStateChanged(auth, async (user) => {
+
+    if(!user){
+        alert("Login first");
+        window.location.href = "login.html";
+        return;
+    }
+
+    if(user.email !== ADMIN_EMAIL){
+        alert("Access Denied ❌");
+        window.location.href = "index.html";
+        return;
+    }
+
+    // যদি ঠিক হয় তাহলে orders load
+    loadOrders();
+});
+
+// 🔥 LOAD ORDERS
 async function loadOrders(){
+    ordersDiv.innerHTML = "";
+
     const querySnapshot = await getDocs(collection(db, "orders"));
 
     querySnapshot.forEach((docSnap) => {
@@ -43,11 +72,11 @@ async function loadOrders(){
         div.className = "card";
 
         div.innerHTML = `
-        <p>${data.user}</p>
-        <p>${data.uid}</p>
-        <p>${data.pack}</p>
-        <p>${data.trx}</p>
-        <p>Status: ${data.status}</p>
+        <p>👤 ${data.user}</p>
+        <p>🎮 UID: ${data.uid}</p>
+        <p>💎 Pack: ${data.pack}</p>
+        <p>💳 TRX: ${data.trx}</p>
+        <p>📌 Status: ${data.status}</p>
 
         <button class="approve" onclick="approveOrder('${docSnap.id}')">Approve</button>
         <button class="reject" onclick="rejectOrder('${docSnap.id}')">Reject</button>
@@ -57,6 +86,7 @@ async function loadOrders(){
     });
 }
 
+// ✅ APPROVE + BALANCE ADD
 window.approveOrder = async function(id){
 
     const ref = doc(db, "orders", id);
@@ -75,13 +105,13 @@ window.approveOrder = async function(id){
     location.reload();
 }
 
+// ❌ REJECT
 window.rejectOrder = async function(id){
     await updateDoc(doc(db, "orders", id), { status: "rejected" });
     alert("❌ Rejected");
     location.reload();
 }
 
-loadOrders();
 </script>
 
 </body>
