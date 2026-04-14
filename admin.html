@@ -45,8 +45,10 @@ button{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, updateDoc, doc, setDoc }
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+import { 
+    getFirestore, collection, getDocs, updateDoc, doc, setDoc, getDoc 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDle4ZxvdXBXsgaYzD-XHI__Y_QheGuC68",
@@ -85,19 +87,31 @@ async function loadOrders(){
     });
 }
 
-// ✅ APPROVE → BALANCE ADD
+// ✅ APPROVE → BALANCE ADD FIXED
 window.approveOrder = async function(id, userEmail, amount){
 
-    // update order
+    // update order status
     await updateDoc(doc(db, "orders", id), {
         status: "approved"
     });
 
-    // update balance
     const userRef = doc(db, "users", userEmail);
 
+    // 🔥 get old balance
+    const userSnap = await getDoc(userRef);
+
+    let oldBalance = 0;
+
+    if(userSnap.exists()){
+        oldBalance = userSnap.data().balance || 0;
+    }
+
+    // 🔥 add new balance
+    let newBalance = oldBalance + amount;
+
+    // 🔥 save new balance
     await setDoc(userRef, {
-        balance: amount
+        balance: newBalance
     }, { merge: true });
 
     alert("✅ Approved & Balance Added");
